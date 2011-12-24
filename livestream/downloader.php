@@ -1,17 +1,14 @@
 <?php
 $library = simplexml_load_file('http://xoccupyoaklandx.api.channel.livestream.com/2.0/lslibrary');
 $namespaces = $library->getNameSpaces(TRUE);
-$ls = $library->channel->children($namespaces['ls']);
-$directory = $ls->directory->children();
-foreach ($directory->item as $item) {
-  $item = $item->children($namespaces['ls']);
-  $items[] = $item;
-}
-foreach ($ls->directory->directory as $directory) {
-  $directory = $directory->children();
-  foreach ($directory->item as $item) {
-    $item = $item->children($namespaces['ls']);
-    $items[] = $item;
+foreach ($library->channel->children($namespaces['ls'])->directory as $directory) {
+  foreach ($directory->children()->item as $item) {
+    $items[] = $item->children($namespaces['ls']);
+  }
+  foreach ($directory->directory as $directory) {
+    foreach ($directory->children()->item as $item) {
+      $items[] = $item->children($namespaces['ls']);
+    }
   }
 }
 foreach ($items as $item) {
